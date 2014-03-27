@@ -37,7 +37,8 @@ public class MainGamePanel extends SurfaceView implements
 		ball = new Ball(BitmapFactory.decodeResource(getResources(), R.drawable.pong_ball), 100 , 250);
 		score = new Score();
 		
-		thread = new MainThread(getHolder(), this);
+		thread = MainThread.getInstance();
+		thread.setup(getHolder(), this);
 		
 		setFocusable(true);
 	}

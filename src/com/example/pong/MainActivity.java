@@ -23,14 +23,46 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		Log.d(TAG, "Destroying...");
+		MainThread thread = MainThread.getInstance();
+		thread.interrupt();
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		super.onDestroy();
 	}
 
 	@Override
 	protected void onStop() {
 		Log.d(TAG, "Stopping...");
+		MainThread thread = MainThread.getInstance();
+		thread.interrupt();
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		super.onStop();
 	}
+
+	@Override
+	protected void onPause() {
+		Log.d(TAG, "Stopping...");
+		MainThread thread = MainThread.getInstance();
+		thread.interrupt();
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		super.onPause();
+	}
+	
+	
     
     
 }

@@ -14,6 +14,7 @@ import android.view.SurfaceHolder;
 public class MainThread extends Thread {
 	
 	private static final String TAG = MainThread.class.getSimpleName();
+	private static MainThread instance = null;
 
 	// Surface holder that can access the physical surface
 	private SurfaceHolder surfaceHolder;
@@ -21,38 +22,39 @@ public class MainThread extends Thread {
 	// and draws to the surface
 	private MainGamePanel gamePanel;
 	
-	// desired fps
-	private final static int 	MAX_FPS = 30;	
+	private final static int 	MAX_FPS = 60;	
 	// maximum number of frames to be skipped
 	private final static int	MAX_FRAME_SKIPS = 5;	
 	// the frame period
 	private final static int	FRAME_PERIOD = 1000 / MAX_FPS;
 	
-	/* Stuff for stats */
-    private DecimalFormat df = new DecimalFormat("0.##");  // 2 dp
-	// we'll be reading the stats every second
-	private final static int 	STAT_INTERVAL = 1000; //ms
-	// the average will be calculated by storing 
-	// the last n FPSs
-	private final static int	FPS_HISTORY_NR = 10;
-	// the status time counter
-	private long statusIntervalTimer	= 0l;
-	// number of frames skipped since the game started
-	private long totalFramesSkipped			= 0l;
-	// number of frames skipped in a store cycle (1 sec)
-	private long framesSkippedPerStatCycle 	= 0l;
-
-	private double 	averageFps = 0.0;
-	// flag to hold game state 
 	private boolean running;
+	
+	private MainThread() {
+		super();
+	}
+	
+	public static synchronized MainThread getInstance(){
+		if(instance==null){
+			instance=new MainThread();
+		}
+		return instance;
+	}
+	
 	public void setRunning(boolean running) {
 		this.running = running;
 	}
 
-	public MainThread(SurfaceHolder surfaceHolder, MainGamePanel gamePanel) {
-		super();
+//	public MainThread(SurfaceHolder surfaceHolder, MainGamePanel gamePanel) {
+//		super();
+//		this.surfaceHolder = surfaceHolder;
+//		this.gamePanel = gamePanel;
+//	}
+	
+	public void setup(SurfaceHolder surfaceHolder, MainGamePanel gamePanel){
 		this.surfaceHolder = surfaceHolder;
 		this.gamePanel = gamePanel;
+		
 	}
 
 	@Override
@@ -102,7 +104,6 @@ public class MainThread extends Thread {
 					}
 					
 					// for statistics
-					framesSkippedPerStatCycle += framesSkipped;
 					// calling the routine to store the gathered statistics
 				}
 			} finally {
